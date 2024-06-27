@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <Version>1.0.1</Version>
+    <Title>NepaliDateConverter.Gaurav</Title>
+    <Company>Gaurav Maharjan</Company>
+    <Authors>Gaurav Maharjan</Authors>
+    <Description>DateConverterNepali is a .NET library for converting dates between the Nepali (Bikram Sambat) calendar and the Gregorian calendar.</Description>
+    <Copyright>@Copyright by Gaurav Maharjan</Copyright>
+    <PackageIcon>NepaliDateConverterImg.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/GauravMaharjan999/DateConverterNepali</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GauravMaharjan999/DateConverterNepali</RepositoryUrl>
+    <RepositoryType>git </RepositoryType>
+    <PackageTags>NepaliDate;BikramSambat;GregorianCalendar;DateConversion;CalendarConverter;NepaliCalendar;BS;AD;DateConverter;Nepal;TimeSpan;FiscalYear;YearList;DateTime;DateUtils;NepaliTime;DateUtility;TimeUtility;CalendarUtils;DateHandling;DateFormatting;DateParser;DateManipulation;DateFunctions;DateHelpers;DateLibrary;NepaliCulture;TimeConversion;CalendarConversion;DateConversionLibrary;DateOperations;DateTools;DateExtensions;DateComponents;DateFeatures;DateHandlingLibrary;DateManagement;DateManipulationLibrary;DateParserLibrary;DateTimeUtils;DateTimeFunctions;DateTimeHelpers;DateTimeLibrary;DateTimeManipulation;DateTimeOperations;DateTimeTools;DateTimeExtensions;DateTimeComponents;DateTimeFeatures;DateTimeHandling;DateTimeManagement;FiscalYearConverter;FiscalYearUtils;FiscalYearFunctions;FiscalYearHelpers;FiscalYearLibrary;FiscalYearManipulation;FiscalYearOperations;FiscalYearTools;FiscalYearExtensions;FiscalYearComponents;FiscalYearFeatures;FiscalYearHandling;FiscalYearManagement;TimeSpanConverter;TimeSpanUtils;TimeSpanFunctions;TimeSpanHelpers;TimeSpanLibrary;TimeSpanManipulation;TimeSpanOperations;TimeSpanTools;TimeSpanExtensions;TimeSpanComponents;TimeSpanFeatures;TimeSpanHandling;TimeSpanManagement;YearConverter;YearUtils;YearFunctions;YearHelpers;YearLibrary;YearManipulation;YearOperations;YearTools;YearExtensions;YearComponents;YearFeatures;YearHandling;YearManagement;MonthConverter;MonthUtils;MonthFunctions;MonthHelpers;MonthLibrary;MonthManipulation;MonthOperations;MonthTools;MonthExtensions;MonthComponents</PackageTags>
+    <PackAsTool>False</PackAsTool>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\gaurav.maharjan\Desktop\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="C:\Users\gaurav.maharjan\Downloads\NepaliDateConverterImg.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

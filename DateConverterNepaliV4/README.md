@@ -28,7 +28,7 @@ License
 This project is licensed under the MIT License.
 
 ## Sample code
-``` C Sharp
+``` C Sharp 
 
 using static DateConverterNepali.DateConverter;  // Import the static class members
 
@@ -38,7 +38,7 @@ Console.WriteLine(GetDateInBS(DateTime.Now));  //convert AD to BS
 
 // Get the equivalent date in Anno Domini (AD) format
 Console.WriteLine(GetDateInAD("2081/03/31")); //convert BS to AD
-Console.WriteLine(await (GetFiscalYear(DateTime.Now, DateConverterNepali.OprDateType.Nepali)));
+Console.WriteLine(GetFiscalYear(DateTime.Now, DateConverterNepali.OprDateType.Nepali));
 var yearList = GetYearListAd().ToList();
 
 // Log the list to the console
