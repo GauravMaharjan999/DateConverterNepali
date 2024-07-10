@@ -101,4 +101,29 @@ namespace DateConverterNepali
             return months;
         }
     }
+    public static class NepaliDayProvider
+    {
+        private static readonly string[] NepaliDays =
+        {
+        "आइतबार", // Sunday
+        "सोमबार", // Monday
+        "मंगलबार", // Tuesday
+        "बुधबार", // Wednesday
+        "बिहीबार", // Thursday
+        "शुक्रबार", // Friday
+        "शनिबार"  // Saturday
+    };
+        
+
+        public static string GetNepaliFontDayName(int dayNumber)
+        {
+            if (dayNumber < 0 || dayNumber > 6)
+            {
+                throw new ArgumentException("Invalid day number. Day number must be between 0 (Sunday) and 6 (Saturday).");
+            }
+            return NepaliDays[dayNumber];
+        }
+        
+    }
+
 }

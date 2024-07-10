@@ -4,92 +4,33 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace DateConverterNepali
 {
 
-    public class DateConverter
+    public static class DateConverter
     {
-        public static DateTime GetDateInAD(string dateInBS)
+
+        public static NepaliDate GetDateInBS(int year, int month, int day, DateFormats date_format = 0)
         {
-            DateTime dateAD;
-            var k = new string[3];
-            var d = new string[3];
-            int bsYear = 0, bsMonth = 0, bsDay = 0;
-            if ((dateInBS.Contains("-")) || (dateInBS.Contains("/")))
+            // Checking for invalid dates
+            if (!IsValidDate(year, month, day))
             {
-                if (dateInBS.Contains("-"))
-                {
-                    d = dateInBS.Split("-");
-                    if (d.Length == 3)
-                    {
-                        dateInBS = d[0] + '/' + d[1] + '/' + d[2];
-                    }
-                }
-                if (dateInBS.Contains("/"))
-                {
-                    k = dateInBS.Split("/");
-                    if (k.Length == 3)
-                    {
-                        bsYear = (int.TryParse(k[0], out int yr)) == true ? yr : 0;
-                        bsMonth = (int.TryParse(k[1], out int mm)) == true ? mm : 0;
-                        bsDay = (int.TryParse(k[2], out int dd)) == true ? dd : 0;
-                    }
-                }
+                return new NepaliDate();
             }
-            if (bsYear <= 0 || bsMonth <= 0 || bsDay <= 0 || bsMonth > 12 || bsDay > 32)
+            else
             {
-                return DateTime.MinValue;
+                var inputDate = new DateTime(year, month, day);
+                return GetDateInBS(inputDate,date_format);
+
             }
-            int DayOfYearInBS = 0;
-            int yearInAD = bsYear - 57;
-            int[] bsDateData = DateArray.DateDataArray(yearInAD + 1);
-            if (bsDateData == null) { return DateTime.MinValue; }
-            for (int j = 3; j <= bsMonth + 1; j++)
-            {
-                DayOfYearInBS += bsDateData[j];
-            }
-            DayOfYearInBS += bsDay;
-            int initMonthInAD = 4;
-            int[] months = new int[] { 0, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 28, 31, 30 };
-            int[] leapmonths = new int[] { 0, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 29, 31, 30 };
-            int initDaysInMonthAD = months[1];
-            int adTempDays = months[1] - bsDateData[0] + 1;
-            for (int i = 2; DayOfYearInBS > adTempDays; i++)
-            {
-                if (DateTime.IsLeapYear(yearInAD))
-                {
-                    adTempDays += leapmonths[i];
-                    initDaysInMonthAD = leapmonths[i];
-                }
-                else
-                {
-                    adTempDays += months[i];
-                    initDaysInMonthAD = months[i];
-                }
-                initMonthInAD++;
-                if (initMonthInAD > 12)
-                {
-                    initMonthInAD -= 12;
-                    yearInAD++;
-                }
-            }
-            int dayInAD = initDaysInMonthAD - (adTempDays - DayOfYearInBS);
-            string finalMonthInAD = (initMonthInAD < 10) ? "0" + initMonthInAD : initMonthInAD.ToString();
-            string finaldayInAD = (dayInAD < 10) ? "0" + dayInAD : dayInAD.ToString();
-            string dateInAD = String.Format("{0}/{1}/{2}", yearInAD, finalMonthInAD, finaldayInAD);
-            bool hasDate = DateTime.TryParse(dateInAD, out dateAD);
-            if (hasDate == true)
-            {
-                return dateAD;
-            }
-            else return DateTime.MinValue;
         }
-        public static string GetDateInBS(DateTime dateInAD)
+        public static NepaliDate GetDateInBS(DateTime dateInAD, DateFormats date_format = 0)
         {
             if (dateInAD == DateTime.MinValue)
             {
-                return "";
+                return new NepaliDate();
             }
             else
             {
@@ -139,146 +80,327 @@ namespace DateConverterNepali
                 string finalMonthInBS = (initMonthInBS < 10) ? "0" + initMonthInBS : initMonthInBS.ToString();
                 string finaldayInBS = (dayInBS < 10) ? "0" + dayInBS : dayInBS.ToString();
                 string dateInBS = String.Format("{0}/{1}/{2}", yearInBS, finalMonthInBS, finaldayInBS);
-                return dateInBS;
-            }
-        }
-        public static int GetYear(DateTime dateInAD, OprDateType opr)
-        {
-            if (opr == OprDateType.English)
-            {
-                return dateInAD.Year;
-            }
-            else
-            {
-                string dateInBS = GetDateInBS(dateInAD);
-                string[] k = new string[] { };
-                //if (dateInBS != null && dateInBS.Contains("-"))
-                if (dateInBS != null && dateInBS.Contains("/"))
-                {
-                    k = dateInBS.Split('/');
-                }
-                int year;
-                bool check = int.TryParse(k[0], out year);
-                return (check == true ? year : dateInAD.Year);
-            }
-        }
-        public static int GetDay(DateTime dateInAD, OprDateType opr)
-        {
-            if (opr == OprDateType.English)
-            {
-                return dateInAD.Day;
-            }
-            else
-            {
-                string dateInBS = GetDateInBS(dateInAD);
-                string[] k = new string[] { };
-                //if (dateInBS != null && dateInBS.Contains("-"))
-                if (dateInBS != null && dateInBS.Contains("/"))
-                {
-                    k = dateInBS.Split('/');
-                }
-                int day;
-                bool check = int.TryParse(k[2], out day);
-                return (check == true ? day : dateInAD.Day);
-            }
-        }
-        //Converts AD to BS
-        public static string GetFiscalYear(DateTime date, OprDateType oprDateType)
-        {
-            int givenYear, givenMonth, yearAfterGivenYear, yearBeforeGivenYear;
-            string requiredFiscalYear, possibleFiscalYearOne, possibleFiscalYearTwo;
-            var oprDate =  oprDateType;
-            string appointmentDate = "";
-            if (oprDate == OprDateType.English)
-            {
-                appointmentDate = date.ToString("yyyy/MM/dd");
 
-            }
-            else
-            {
-                appointmentDate = GetDateInBS(date);
-
-            }
-            string[] k = appointmentDate.Split('/');
-            givenYear = int.Parse(k[0]);
-            givenMonth = int.Parse(k[1]);
-            yearAfterGivenYear = givenYear + 1;
-            yearBeforeGivenYear = givenYear - 1;
-            //if fiscal year comprises of two different years. (ex:2075/76=>{2-1, 3-2, 4-3})
-            possibleFiscalYearOne = (yearBeforeGivenYear + "/" + givenYear % 100); //one possible fiscal year for appointed year
-            possibleFiscalYearTwo = (givenYear + "/" + yearAfterGivenYear % 100);  // another possible fiscal year for appointed year
-            var durationOfPossibleFiscalYearOne =  FiscalYearProvider.GetFiscalYears().Where(w => w.Year.Contains(possibleFiscalYearOne)).Select(fm => new
-            {
-                StartMonth = fm.FromMonth,
-                EndMonth = fm.ToMonth,
-            }).FirstOrDefault();
-            //if fiscal year ends within a single year (ex:2075=>{1=12, 4=12, 3-12})
-            if (durationOfPossibleFiscalYearOne == null)
-            {
-                var fiscalYearNew =  FiscalYearProvider.GetFiscalYears().Where(w => w.Year.Equals(givenYear)).FirstOrDefault(); //Select(fm => fm.FromMonth).
-                if (fiscalYearNew != null)
+                var formattedDate = "";
+                switch (date_format)
                 {
-                    requiredFiscalYear = fiscalYearNew.ToString();
+                    case DateFormats.mDy:
+                        formattedDate = finalMonthInBS.ToString() + "-" + finaldayInBS.ToString() + "-" + yearInBS;
+                        break;
+                    case DateFormats.dMy:
+                        formattedDate = finaldayInBS.ToString() + "-" + finalMonthInBS.ToString() + "-" + yearInBS;
+                        break;
+                    case DateFormats.yMd:
+                        formattedDate = yearInBS + "-" + finalMonthInBS.ToString() + "-" + finaldayInBS.ToString();
+                        break;
+                    default:
+                        formattedDate = String.Format("{0}/{1}/{2}", yearInBS, finalMonthInBS, finaldayInBS);
+                        break;
+
+                }
+
+                var ifinalDayInBs = int.Parse(finaldayInBS);
+                var ifinalMonthInBS = int.Parse(finalMonthInBS);
+                var iyearInBS = yearInBS;
+                var nepaliDate = new NepaliDate();
+                nepaliDate.setFormattedDate(iyearInBS, ifinalMonthInBS, ifinalDayInBs, date_format);
+                nepaliDate.npDay = ifinalDayInBs;
+                nepaliDate.npMonth = ifinalMonthInBS;
+                nepaliDate.npYear = iyearInBS;
+                //1 is added since we are using Sunday as 1 although it is 0
+                nepaliDate.dayNumber = (int)dateInAD.DayOfWeek + 1;
+                nepaliDate.dayName = dateInAD.DayOfWeek.ToString();
+                nepaliDate.npDaysInMonth = bsDaysInMonth;
+                nepaliDate.nepaliMonthInNepaliFont = ifinalMonthInBS.ToString();
+                nepaliDate.nepaliMonthInEnglishFont = ifinalMonthInBS.ToString();
+                nepaliDate.nepaliDayInNepaliFont = ((int)dateInAD.DayOfWeek).ToString();
+
+
+                return nepaliDate;
+            }
+        }
+
+        public static EnglishDate GetDateInAD(int bsYear, int bsMonth, int bsDay, DateFormats date_format = 0)
+        {
+            DateTime dateAD = DateTime.MinValue;
+
+            // Validate input
+            if (bsYear <= 0 || bsMonth <= 0 || bsDay <= 0 || bsMonth > 12 || bsDay > 32)
+            {
+                return new EnglishDate();
+            }
+
+            return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay));
+        }
+
+        public static EnglishDate GetDateInAD(string dateInBS, DateFormats date_format = 0)
+        {
+            DateTime dateAD;
+            var k = new string[3];
+            var d = new string[3];
+            int bsYear = 0, bsMonth = 0, bsDay = 0;
+            if ((dateInBS.Contains("-")) || (dateInBS.Contains("/")))
+            {
+                if (dateInBS.Contains("-"))
+                {
+                    d = dateInBS.Split("-");
+                    if (d.Length == 3)
+                    {
+                        dateInBS = d[0] + '/' + d[1] + '/' + d[2];
+                    }
+                }
+                if (dateInBS.Contains("/"))
+                {
+                    k = dateInBS.Split("/");
+                    if (k.Length == 3)
+                    {
+                        bsYear = (int.TryParse(k[0], out int yr)) == true ? yr : 0;
+                        bsMonth = (int.TryParse(k[1], out int mm)) == true ? mm : 0;
+                        bsDay = (int.TryParse(k[2], out int dd)) == true ? dd : 0;
+                    }
+                }
+            }
+            if (bsYear <= 0 || bsMonth <= 0 || bsDay <= 0 || bsMonth > 12 || bsDay > 32)
+            {
+                return new EnglishDate();
+            }
+            int DayOfYearInBS = 0;
+            int yearInAD = bsYear - 57;
+            int[] bsDateData = DateArray.DateDataArray(yearInAD + 1);
+            if (bsDateData == null) { return new EnglishDate(); }
+            for (int j = 3; j <= bsMonth + 1; j++)
+            {
+                DayOfYearInBS += bsDateData[j];
+            }
+            DayOfYearInBS += bsDay;
+            int initMonthInAD = 4;
+            int[] months = new int[] { 0, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 28, 31, 30 };
+            int[] leapmonths = new int[] { 0, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 29, 31, 30 };
+            int initDaysInMonthAD = months[1];
+            int adTempDays = months[1] - bsDateData[0] + 1;
+            for (int i = 2; DayOfYearInBS > adTempDays; i++)
+            {
+                if (DateTime.IsLeapYear(yearInAD))
+                {
+                    adTempDays += leapmonths[i];
+                    initDaysInMonthAD = leapmonths[i];
                 }
                 else
                 {
-                    requiredFiscalYear = "";
+                    adTempDays += months[i];
+                    initDaysInMonthAD = months[i];
+                }
+                initMonthInAD++;
+                if (initMonthInAD > 12)
+                {
+                    initMonthInAD -= 12;
+                    yearInAD++;
                 }
             }
-            else
+            int dayInAD = initDaysInMonthAD - (adTempDays - DayOfYearInBS);
+            string finalMonthInAD = (initMonthInAD < 10) ? "0" + initMonthInAD : initMonthInAD.ToString();
+            string finaldayInAD = (dayInAD < 10) ? "0" + dayInAD : dayInAD.ToString();
+            string dateInAD = String.Format("{0}/{1}/{2}", yearInAD, finalMonthInAD, finaldayInAD);
+            bool hasDate = DateTime.TryParse(dateInAD, out dateAD);
+
+            var ifinalMonthInAD = int.Parse(finalMonthInAD);
+            var ifinaldayInAD = int.Parse(finaldayInAD);
+            var iyearInAD = yearInAD;
+            var englishDate = new EnglishDate();
+            if (hasDate == true)
             {
-                requiredFiscalYear = (givenMonth < durationOfPossibleFiscalYearOne.StartMonth && givenMonth <= durationOfPossibleFiscalYearOne.EndMonth) ? possibleFiscalYearOne : possibleFiscalYearTwo;
-            }
-            return requiredFiscalYear;
-        }
-        public static IEnumerable<int?> GetYearListAd()
-        {
-            int startYear = 2000;
-            int endYear = DateTime.Now.Year;
+                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD); 
+                englishDate.engYear = iyearInAD;
+                englishDate.engMonth = ifinalMonthInAD;
+                englishDate.engDay = ifinaldayInAD;
+                englishDate.dayNumber = (int)dateAD.DayOfWeek + 1;
+                englishDate.dayName = dateAD.DayOfWeek.ToString();
+                englishDate.engDaysInMonth = dayInAD;
 
-            List<int?> years = new List<int?>();
-            for (int year = startYear; year <= endYear; year++)
+
+                //return dateAD;
+
+                return englishDate;
+
+            }
+            else return new EnglishDate();
+        }
+
+
+        #region Validation
+        private static bool IsValidDate(int year, int month, int day)
+        {
+            if (year < 1 || month < 1 || month > 12 || day < 1 || day > DateTime.DaysInMonth(year, month))
             {
-                years.Add(year);
+                return false;
             }
-
-            return years;
+            return true;
         }
-        public static string GetYearByFiscalYearId(int fiscalYearId)
+        #endregion
+    }
+    public class Calendar
+    {
+        // Method to check if a year is leap year
+        public static bool IsLeapYear(int englishYear)
         {
-            var year = FiscalYearProvider.GetFiscalYears().Where(x => x.Id == fiscalYearId).Select(x => x.Year).FirstOrDefault();
-            return year;
+            if ((englishYear % 4 == 0 && englishYear % 100 != 0) || englishYear % 400 == 0)
+            {
+                return true;
+            }
+            return false;
         }
 
-        public static string GetMonthByMonthId(int monthId, OprDateType oprDate)
+        // Method to get the name of the day of the week from its number (0-6, Sunday-Saturday)
+        public static string GetDayOfWeek(int weekDayNumber)
         {
-            var month = oprDate == OprDateType.English ? MonthADProvider.GetMonths().Where(x => x.Id == monthId).Select(x => x.Name).FirstOrDefault() : MonthBSProvider.GetMonths().Where(x => x.Id == monthId).Select(x => x.Name).FirstOrDefault();
-            return month;
+            if (weekDayNumber < 0 || weekDayNumber > 6)
+            {
+                throw new ArgumentException("Invalid week day number. Week day number must be between 0 and 6.");
+            }
+            return Enum.GetName(typeof(DayOfWeek), weekDayNumber);
         }
 
-        public static string GetTimeDurationFromTwoTimeSpan(string FromTime, string ToTime)
+        // Method to get the name of the English month for the provided month number (1-12)
+        public static string GetEnglishMonth(int monthNumber)
+        {
+            if (monthNumber < 1 || monthNumber > 12)
+            {
+                throw new ArgumentException("Invalid month number. Month number must be between 1 and 12.");
+            }
+            return new DateTime(2000, monthNumber, 1).ToString("MMMM");
+        }
+
+        // Method to get the name of the Nepali month for the provided month number (1-12)
+        public static string GetNepaliMonthInNepaliFont(int monthNumber)
+        {
+            switch (monthNumber)
+            {
+                case 1: return "बैशाख";
+                case 2: return "जेठ";
+                case 3: return "असार";
+                case 4: return "साउन";
+                case 5: return "भदौ";
+                case 6: return "असोज";
+                case 7: return "कार्तिक";
+                case 8: return "मंसिर";
+                case 9: return "पुष";
+                case 10: return "माघ";
+                case 11: return "फाल्गुन";
+                case 12: return "चैत्र";
+                default: throw new ArgumentException("Invalid month number. Month number must be between 1 and 12.");
+            }
+        }
+
+        // Method to validate if an English date is valid
+        public static bool ValidEnglishDate(int year, int month, int day)
         {
             try
             {
-                DateTime dFrom;
-                DateTime dTo;
-                var TotalWorkingTime = string.Empty;
-                if (DateTime.TryParse(FromTime, out dFrom) && DateTime.TryParse(ToTime, out dTo))
-                {
-                    TimeSpan TS = dTo - dFrom;
-                    int hour = TS.Hours;
-                    int mins = TS.Minutes;
-                    int secs = TS.Seconds;
-
-                    TotalWorkingTime = hour.ToString("00") + " hrs" + " " + mins.ToString("00") + " min" + " " + secs.ToString("00") + " sec";
-                }
-                return TotalWorkingTime;
+                DateTime date = new DateTime(year, month, day);
+                return true;
             }
-            catch (Exception)
+            catch (ArgumentOutOfRangeException)
             {
-                return string.Empty;
+                return false;
             }
         }
+
+        // Method to validate if a Nepali date is valid
+        public static bool ValidNepaliDate(int year, int month, int day)
+        {
+            try
+            {
+                // Convert Nepali date to AD date and then validate
+                var npDate = DateConverter.GetDateInBS(year, month, day);
+                return true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return false;
+            }
+        }
+    }
+
+    public static class TimeConverter
+    {
+        // Assuming this array contains the total number of days in each month of the BS calendar.
+        // This example data is for demonstration purposes and may need to be adjusted.
+        private static readonly int[] bsDaysInMonth = new int[] { 30, 32, 31, 32, 31, 30, 30, 30, 30, 29, 30, 29 };
+
+        // Starting point for BS calendar conversion (Bikram Sambat 2000 corresponds to AD 1943)
+        private static readonly DateTime baseEnglishDate = new DateTime(1943, 4, 13);
+        private static readonly DateTime baseNepaliDate = new DateTime(2000, 1, 1);
+
+        // Nepal Time Offset from UTC (+5:45 hours)
+        private static readonly TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
+
+        public static (int year, int month, int day, int hour, int minute, int second) ConvertToNepaliDateTime(DateTime englishDateTime)
+        {
+            // Adjust the English date time by the Nepal time offset
+            DateTime adjustedDateTime = englishDateTime.Add(nepalTimeOffset);
+
+            // Date conversion
+            int nepaliYear = 2000;
+            int nepaliMonth = 1;
+            int nepaliDay = 1;
+
+            // Calculate the difference in days from the base date
+            TimeSpan dateDifference = adjustedDateTime.Date - baseEnglishDate;
+            int totalDays = (int)dateDifference.TotalDays;
+
+            // Convert totalDays to BS date
+            nepaliDay += totalDays;
+
+            // Adjust the days, months, and years
+            while (nepaliDay > bsDaysInMonth[nepaliMonth - 1])
+            {
+                nepaliDay -= bsDaysInMonth[nepaliMonth - 1];
+                nepaliMonth++;
+                if (nepaliMonth > 12)
+                {
+                    nepaliMonth = 1;
+                    nepaliYear++;
+                }
+            }
+
+            // Time conversion
+            int hour = adjustedDateTime.Hour;
+            int minute = adjustedDateTime.Minute;
+            int second = adjustedDateTime.Second;
+
+            return (nepaliYear, nepaliMonth, nepaliDay, hour, minute, second);
+        }
+        public static TimeSpan ConvertUtcToNepaliTime(TimeSpan utcTime)
+        {
+            // Nepal Standard Time offset from UTC (+5:45 hours)
+            TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
+
+            // Calculate total seconds in UTC time
+            double utcTotalSeconds = utcTime.TotalSeconds;
+
+            // Calculate total seconds in Nepal time
+            double nepaliTotalSeconds = utcTotalSeconds + (nepalTimeOffset.TotalSeconds);
+
+            // Return TimeSpan representing Nepal time
+            return TimeSpan.FromSeconds(nepaliTotalSeconds);
+        }
+
+        public static TimeSpan ConvertNepaliTimeToUtc(TimeSpan nepaliTime)
+        {
+            // Nepal Standard Time offset from UTC (+5:45 hours)
+            TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
+
+            // Calculate total seconds in Nepal time
+            double nepaliTotalSeconds = nepaliTime.TotalSeconds;
+
+            // Calculate total seconds in UTC time
+            double utcTotalSeconds = nepaliTotalSeconds - nepalTimeOffset.TotalSeconds;
+
+            // Return TimeSpan representing UTC time
+            return TimeSpan.FromSeconds(utcTotalSeconds);
+        }
+
+
     }
     public static class DateArray
     {
