@@ -82,14 +82,66 @@ class Program
 
 
         // Convert AD date to BS date
-        int year = 2024;
-        int month = 7;
-        int day = 10;
+        int year = 2000;
+        int month = 01;
+        int day = 09;
         var dateInBS = GetDateInBS(year, month, day,DateFormats.yMd);
         //Console.WriteLine($"Converted AD Date ({month}/{day}/{year}) to BS Date:");
         //Console.WriteLine($"Date in BS: {dateInBS}");
 
+
+        int yearBs = 2056;
+        int monthBs = 09;
+        int dayBs = 25;
+        var dateInAd = GetDateInAD(yearBs, monthBs, dayBs, DateFormats.yMd);
+
+
         PrintProperties(dateInBS);
+        Console.WriteLine($"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        PrintProperties(dateInAd);
+
+        Console.WriteLine($"####################################################################################################################################################################################################################################");
+
+        // Check if a year is a leap year
+        Console.WriteLine("Is 2024 a leap year? " + Calendar.IsLeapYear(2024)); // Expected output: True
+        Console.WriteLine("Is 2023 a leap year? " + Calendar.IsLeapYear(2023)); // Expected output: False
+
+        // Get the name of the day of the week from its number
+        Console.WriteLine("Day of week for 0: " + Calendar.GetDayOfWeek(0)); // Expected output: Sunday
+        Console.WriteLine("Day of week for 3: " + Calendar.GetDayOfWeek(3)); // Expected output: Wednesday
+        Console.WriteLine("Day of week for 6: " + Calendar.GetDayOfWeek(6)); // Expected output: Saturday
+
+        // Get the name of the English month for the provided month number
+        Console.WriteLine("English month for 1: " + Calendar.GetEnglishMonth(1)); // Expected output: January
+        Console.WriteLine("English month for 12: " + Calendar.GetEnglishMonth(12)); // Expected output: December
+
+        // Get the name of the Nepali month for the provided month number
+        Console.WriteLine("Nepali month for 1: " + Calendar.GetNepaliMonthInNepaliFont(1)); // Expected output: बैशाख
+        Console.WriteLine("Nepali month for 12: " + Calendar.GetNepaliMonthInNepaliFont(12)); // Expected output: चैत्र
+
+        // Validate if an English date is valid
+        Console.WriteLine("Is 2024-02-29 a valid English date? " + Calendar.ValidEnglishDate(2024, 2, 29)); // Expected output: True
+        Console.WriteLine("Is 2023-02-29 a valid English date? " + Calendar.ValidEnglishDate(2023, 2, 29)); // Expected output: False
+
+        // Convert an English date to a Nepali date
+        var nepaliDate = TimeConverter.ConvertToNepaliDateTime(new DateTime(2024, 7, 11));
+        Console.WriteLine($"Converted Nepali Date: {nepaliDate.year}-{nepaliDate.month}-{nepaliDate.day} {nepaliDate.hour}:{nepaliDate.minute}:{nepaliDate.second}");
+        // Expected output: Converted Nepali Date: 2081-3-27 5:45:00 (or close approximation)
+
+        // Convert UTC time to Nepali time
+        TimeSpan utcTime = new TimeSpan(12, 0, 0); // 12:00 PM UTC
+        TimeSpan nepaliTime = TimeConverter.ConvertUtcToNepaliTime(utcTime);
+        Console.WriteLine("Nepali time for 12:00 PM UTC: " + nepaliTime); // Expected output: 17:45:00
+
+        // Convert Nepali time to UTC time
+        TimeSpan nepaliTimeToConvert = new TimeSpan(17, 45, 0); // 5:45 PM Nepali Time
+        TimeSpan utcConvertedTime = TimeConverter.ConvertNepaliTimeToUtc(nepaliTimeToConvert);
+        Console.WriteLine("UTC time for 5:45 PM Nepali Time: " + utcConvertedTime); // Expected output: 12:00:00
+
+        Console.WriteLine($"####################################################################################################################################################################################################################################");
+
+
     }
     public static void PrintProperties(object obj)
     {

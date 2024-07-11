@@ -25,6 +25,51 @@ namespace DateConverterNepali
         private string _nepaliDayInNepaliFont;
 
 
+        public int npYear
+        {
+            get
+            {
+                return _npYear;
+            }
+            set
+            {
+                _npYear = value;
+            }
+        }
+
+        public int npMonth
+        {
+            get
+            {
+                return _npMonth;
+            }
+            set
+            {
+                if (value > 12)
+                {
+                    throw new Exception("Month cannot be greater than 12.");
+                }
+
+                _npMonth = value;
+            }
+        }
+
+        public int npDay
+        {
+            get
+            {
+                return _npDay;
+            }
+            set
+            {
+                if (value > 32)
+                {
+                    throw new Exception("Nepali Date cannot be greater than 32.");
+                }
+
+                _npDay = value;
+            }
+        }
         public string nepaliMonthInNepaliFont
         {
             get
@@ -102,52 +147,6 @@ namespace DateConverterNepali
             set
             {
                 _npDaysInMonth = value;
-            }
-        }
-
-        public int npYear
-        {
-            get
-            {
-                return _npYear;
-            }
-            set
-            {
-                _npYear = value;
-            }
-        }
-
-        public int npMonth
-        {
-            get
-            {
-                return _npMonth;
-            }
-            set
-            {
-                if (value > 12)
-                {
-                    throw new Exception("Month cannot be greater than 12.");
-                }
-
-                _npMonth = value;
-            }
-        }
-
-        public int npDay
-        {
-            get
-            {
-                return _npDay;
-            }
-            set
-            {
-                if (value > 32)
-                {
-                    throw new Exception("Nepali Date cannot be greater than 32.");
-                }
-
-                _npDay = value;
             }
         }
 

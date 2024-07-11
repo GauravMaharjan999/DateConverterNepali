@@ -98,6 +98,7 @@ namespace DateConverterNepali
                         break;
 
                 }
+                Console.WriteLine(formattedDate);
 
                 var ifinalDayInBs = int.Parse(finaldayInBS);
                 var ifinalMonthInBS = int.Parse(finalMonthInBS);
@@ -130,7 +131,7 @@ namespace DateConverterNepali
                 return new EnglishDate();
             }
 
-            return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay));
+            return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay), date_format);
         }
 
         public static EnglishDate GetDateInAD(string dateInBS, DateFormats date_format = 0)
@@ -209,13 +210,13 @@ namespace DateConverterNepali
             var englishDate = new EnglishDate();
             if (hasDate == true)
             {
-                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD); 
+                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD, date_format); 
                 englishDate.engYear = iyearInAD;
                 englishDate.engMonth = ifinalMonthInAD;
                 englishDate.engDay = ifinaldayInAD;
                 englishDate.dayNumber = (int)dateAD.DayOfWeek + 1;
                 englishDate.dayName = dateAD.DayOfWeek.ToString();
-                englishDate.engDaysInMonth = dayInAD;
+                englishDate.engDaysInMonth = DateTime.DaysInMonth(iyearInAD, ifinalMonthInAD);
 
 
                 //return dateAD;
