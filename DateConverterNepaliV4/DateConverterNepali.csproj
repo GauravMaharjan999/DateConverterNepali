@@ -10,7 +10,7 @@
     <Authors>Gaurav Maharjan</Authors>
     <Description>DateConverterNepali is a .NET library for converting dates between the Nepali (Bikram Sambat) calendar and the Gregorian calendar.</Description>
     <Copyright>@Copyright by Gaurav Maharjan</Copyright>
-    <PackageIcon>NepaliDateConverterImg.png</PackageIcon>
+    <PackageIcon>BiometricDeviceCommunication.jpg</PackageIcon>
     <PackageProjectUrl>https://github.com/GauravMaharjan999/DateConverterNepali</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GauravMaharjan999/DateConverterNepali</RepositoryUrl>
     <RepositoryType>git </RepositoryType>
@@ -23,11 +23,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\gaurav.maharjan\Desktop\README.md">
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="C:\Users\gaurav.maharjan\Downloads\NepaliDateConverterImg.png">
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="BiometricDeviceCommunication.jpg">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

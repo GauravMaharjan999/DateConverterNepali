@@ -196,34 +196,34 @@ namespace DateConverterNepali
         /// <param name="month">The month of the date.</param>
         /// <param name="day">The day of the date.</param>
         /// <param name="date_format">The format in which to set the date.</param>
-        public void setFormattedDate(int year, int month, int day, DateFormats date_format)
+        public void setFormattedDate(int year, int month, int day, DateFormats date_format=0, string seperator = "-")
         {
             string formattedDate = "";
-            string text = month.ToString();
-            string text2 = day.ToString();
+            string strMonth = month.ToString();
+            string strDay = day.ToString();
             if (month < 10)
             {
-                text = "0" + month;
+                strMonth = "0" + month;
             }
 
             if (day < 10)
             {
-                text2 = "0" + day;
+                strDay = "0" + day;
             }
 
             switch (date_format)
             {
                 case DateFormats.mDy:
-                    formattedDate = text.ToString() + "-" + text2.ToString() + "-" + year;
+                    formattedDate = strMonth.ToString() + seperator + strDay.ToString() + seperator + year;
                     break;
                 case DateFormats.dMy:
-                    formattedDate = text2.ToString() + "-" + text.ToString() + "-" + year;
+                    formattedDate = strDay.ToString() + seperator + strMonth.ToString() + seperator + year;
                     break;
                 case DateFormats.yMd:
-                    formattedDate = year + "-" + text.ToString() + "-" + text2.ToString();
+                    formattedDate = year + seperator + strMonth.ToString() + seperator + strDay.ToString();
                     break;
                 default:
-                    formattedDate = String.Format("{0}/{1}/{2}", year, text, text2);
+                    formattedDate = String.Format("{0}{3}{1}{3}{2}", year, strMonth, strDay,seperator);
                     break;
             }
 
@@ -234,14 +234,15 @@ namespace DateConverterNepali
         /// Gets the formatted date as a string.
         /// </summary>
         /// <returns>The formatted date as a string.</returns>
-        public string getFormattedDate()
+        public string getFormattedDate(string seperator = "-")
         {
             if (_formattedDate != null)
             {
                 return _formattedDate;
             }
 
-            return npMonth + "-" + npDay + "-" + npYear;
+            //return npMonth + "-" + npDay + "-" + npYear;
+            return npYear  + seperator + npMonth + seperator + npDay;
         }
     }
 
@@ -250,6 +251,10 @@ namespace DateConverterNepali
     /// </summary>
     public enum DateFormats
     {
+        /// <summary>
+        /// Year-Month-Day format (yyyy-MM-dd).
+        /// </summary>
+        yMd,
         /// <summary>
         /// Month-Day-Year format (MM-dd-yyyy).
         /// </summary>
@@ -260,9 +265,6 @@ namespace DateConverterNepali
         /// </summary>
         dMy,
 
-        /// <summary>
-        /// Year-Month-Day format (yyyy-MM-dd).
-        /// </summary>
-        yMd
+
     }
 }

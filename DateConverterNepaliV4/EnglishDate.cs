@@ -125,38 +125,11 @@ namespace DateConverterNepali
         /// <param name="month">The month of the date.</param>
         /// <param name="day">The day of the date.</param>
         /// <param name="format">The format in which to set the date.</param>
-        public void setFormattedDate(int year, int month, int day, DateFormats format)
+        public void setFormattedDate(int year, int month, int day)
         {
             _formattedDate = new DateTime(year, month, day);
 
-            string dateFormat;
-            switch (format)
-            {
-                case DateFormats.mDy:
-                    dateFormat = "MM/dd/yyyy";
-                    break;
-                case DateFormats.dMy:
-                    dateFormat = "dd/MM/yyyy";
-                    break;
-                case DateFormats.yMd:
-                    dateFormat = "yyyy/MM/dd";
-                    break;
-                default:
-                    dateFormat = "MM/dd/yyyy"; // Default format
-                    break;
-            }
-
-            string formattedDate = _formattedDate?.ToString(dateFormat, CultureInfo.InvariantCulture);
-
-            // Parse the formatted date back to DateTime
-            if (DateTime.TryParseExact(formattedDate, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-            {
-                _formattedDate = parsedDate;
-            }
-            else
-            {
-                throw new FormatException("Unable to parse the formatted date.");
-            }
+            
         }
 
         /// <summary>

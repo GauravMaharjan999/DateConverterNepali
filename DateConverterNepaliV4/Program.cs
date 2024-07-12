@@ -1,5 +1,6 @@
 ﻿using DateConverterNepali;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -81,28 +82,37 @@ class Program
 
 
 
+        #region Date Converter
         // Convert AD date to BS date
-        int year = 2000;
-        int month = 01;
-        int day = 09;
-        var dateInBS = GetDateInBS(year, month, day,DateFormats.yMd);
+        int year = 2002;
+        int month = 03;
+        int day = 01;
+        var dateInBS = GetDateInBS(year, month, day, DateFormats.yMd, seperator: "/");
         //Console.WriteLine($"Converted AD Date ({month}/{day}/{year}) to BS Date:");
         //Console.WriteLine($"Date in BS: {dateInBS}");
 
-
-        int yearBs = 2056;
-        int monthBs = 09;
-        int dayBs = 25;
-        var dateInAd = GetDateInAD(yearBs, monthBs, dayBs, DateFormats.yMd);
-
-
+        Console.WriteLine($"Input Year: {year}");
+        Console.WriteLine($"Input Month: {month}");
+        Console.WriteLine($"Input Day: {day}");
         PrintProperties(dateInBS);
         Console.WriteLine($"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-        PrintProperties(dateInAd);
+        int yearBs = 2058;
+        int monthBs = 11;
+        int dayBs = 17;
+        var dateInAd = GetDateInAD(yearBs, monthBs, dayBs);
+
+
+
+        Console.WriteLine($"Input Year: {yearBs}");
+        Console.WriteLine($"Input Month: {monthBs}");
+        Console.WriteLine($"Input Day: {dayBs}");
+        PrintProperties(dateInAd); 
+        #endregion
 
         Console.WriteLine($"####################################################################################################################################################################################################################################");
 
+        #region Calender
         // Check if a year is a leap year
         Console.WriteLine("Is 2024 a leap year? " + Calendar.IsLeapYear(2024)); // Expected output: True
         Console.WriteLine("Is 2023 a leap year? " + Calendar.IsLeapYear(2023)); // Expected output: False
@@ -135,12 +145,61 @@ class Program
         Console.WriteLine("Nepali time for 12:00 PM UTC: " + nepaliTime); // Expected output: 17:45:00
 
         // Convert Nepali time to UTC time
-        TimeSpan nepaliTimeToConvert = new TimeSpan(17, 45, 0); // 5:45 PM Nepali Time
+        TimeSpan nepaliTimeToConvert = DateTime.Now.TimeOfDay; // 5:45 PM Nepali Time
         TimeSpan utcConvertedTime = TimeConverter.ConvertNepaliTimeToUtc(nepaliTimeToConvert);
-        Console.WriteLine("UTC time for 5:45 PM Nepali Time: " + utcConvertedTime); // Expected output: 12:00:00
+        Console.WriteLine($"UTC time for {nepaliTimeToConvert} Nepali Time: " + utcConvertedTime); // Expected output: 12:00:00
+
+        #endregion
 
         Console.WriteLine($"####################################################################################################################################################################################################################################");
 
+        #region FiscalYearHelper
+        // Example dates
+        DateTime engDate = new DateTime(2024, 7, 12);
+
+
+        // Get year in Nepali calendar
+        int nepaliYear = FiscalYearHelper.GetYear(engDate, OprDateType.Nepali);
+        Console.WriteLine($"Nepali Year: {nepaliYear}");
+
+
+        // Get day in Nepali calendar
+        int nepaliDay = FiscalYearHelper.GetDay(engDate, OprDateType.Nepali);
+        Console.WriteLine($"Day in Nepali Calendar: {nepaliDay}");
+
+
+        // Get fiscal year for Nepali date
+        string nepaliFiscalYear = FiscalYearHelper.GetFiscalYear(engDate, OprDateType.Nepali);
+        Console.WriteLine($"Fiscal Year (Nepali): {nepaliFiscalYear}");
+
+        // Get list of years from 2000 to current year
+        IEnumerable<int?> years = FiscalYearHelper.GetYearListAd();
+        Console.WriteLine("Years from 2000 to Current Year:");
+        foreach (var yr in years)
+        {
+            Console.Write($"{yr} ");
+        }
+        Console.WriteLine();
+
+        // Get fiscal year details for a specific year
+        string yearToFind = "2080"; // Example year
+        FiscalYear fiscalYearDetails = FiscalYearHelper.GetFiscalYearByYear(yearToFind);
+        if (fiscalYearDetails != null)
+        {
+            Console.WriteLine($"Fiscal Year Details for {yearToFind}: ");
+            PrintProperties(fiscalYearDetails);
+        }
+        else
+        {
+            Console.WriteLine($"Fiscal Year Details not found for {yearToFind}");
+        }
+
+        // Calculate time duration between two times
+        string fromTime = "09:00:00";
+        string toTime = "17:30:00";
+        string duration = FiscalYearHelper.GetTimeDurationFromTwoTimeSpan(fromTime, toTime);
+        Console.WriteLine($"Time Duration: {duration}");
+        #endregion
 
     }
     public static void PrintProperties(object obj)

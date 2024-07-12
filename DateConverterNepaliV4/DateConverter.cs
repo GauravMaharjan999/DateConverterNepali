@@ -22,7 +22,7 @@ namespace DateConverterNepali
         /// <param name="day">The day in AD.</param>
         /// <param name="date_format">The format of the Nepali date.</param>
         /// <returns>A NepaliDate object representing the converted date.</returns>
-        public static NepaliDate GetDateInBS(int year, int month, int day, DateFormats date_format = 0)
+        public static NepaliDate GetDateInBS(int year, int month, int day, DateFormats date_format = 0, string seperator = "-")
         {
             // Checking for invalid dates
             if (!IsValidDate(year, month, day))
@@ -32,7 +32,7 @@ namespace DateConverterNepali
             else
             {
                 var inputDate = new DateTime(year, month, day);
-                return GetDateInBS(inputDate, date_format);
+                return GetDateInBS(inputDate, date_format,seperator);
             }
         }
 
@@ -42,7 +42,7 @@ namespace DateConverterNepali
         /// <param name="dateInAD">The DateTime object in AD.</param>
         /// <param name="date_format">The format of the Nepali date.</param>
         /// <returns>A NepaliDate object representing the converted date.</returns>
-        public static NepaliDate GetDateInBS(DateTime dateInAD, DateFormats date_format = 0)
+        public static NepaliDate GetDateInBS(DateTime dateInAD, DateFormats date_format = 0,string seperator = "-")
         {
             if (dateInAD == DateTime.MinValue)
             {
@@ -118,7 +118,7 @@ namespace DateConverterNepali
                 var ifinalMonthInBS = int.Parse(finalMonthInBS);
                 var iyearInBS = yearInBS;
                 var nepaliDate = new NepaliDate();
-                nepaliDate.setFormattedDate(iyearInBS, ifinalMonthInBS, ifinalDayInBs, date_format);
+                nepaliDate.setFormattedDate(iyearInBS, ifinalMonthInBS, ifinalDayInBs, date_format,seperator);
                 nepaliDate.npDay = ifinalDayInBs;
                 nepaliDate.npMonth = ifinalMonthInBS;
                 nepaliDate.npYear = iyearInBS;
@@ -142,7 +142,7 @@ namespace DateConverterNepali
         /// <param name="bsDay">The day in BS.</param>
         /// <param name="date_format">The format of the Gregorian date.</param>
         /// <returns>An EnglishDate object representing the converted date.</returns>
-        public static EnglishDate GetDateInAD(int bsYear, int bsMonth, int bsDay, DateFormats date_format = 0)
+        public static EnglishDate GetDateInAD(int bsYear, int bsMonth, int bsDay)
         {
             DateTime dateAD = DateTime.MinValue;
 
@@ -152,7 +152,7 @@ namespace DateConverterNepali
                 return new EnglishDate();
             }
 
-            return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay), date_format);
+            return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace DateConverterNepali
         /// <param name="dateInBS">The Nepali date string in "yyyy/MM/dd" format.</param>
         /// <param name="date_format">The format of the Gregorian date.</param>
         /// <returns>An EnglishDate object representing the converted date.</returns>
-        public static EnglishDate GetDateInAD(string dateInBS, DateFormats date_format = 0)
+        public static EnglishDate GetDateInAD(string dateInBS)
         {
             DateTime dateAD;
             var k = new string[3];
@@ -237,7 +237,7 @@ namespace DateConverterNepali
             var englishDate = new EnglishDate();
             if (hasDate == true)
             {
-                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD, date_format);
+                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD);
                 englishDate.engYear = iyearInAD;
                 englishDate.engMonth = ifinalMonthInAD;
                 englishDate.engDay = ifinaldayInAD;
@@ -363,14 +363,39 @@ namespace DateConverterNepali
                 return false;
             }
         }
+        public static bool ValidEnglishDate(DateTime date)
+        {
+            try
+            {
+                DateTime validDate = new DateTime(date.Year, date.Month, date.Day);
+                return true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return false;
+            }
+        }
 
         // Method to validate if a Nepali date is valid
-        public static bool ValidNepaliDate(int year, int month, int day)
+        public static bool ValidNepaliDate(int npYear, int npMonth, int npDay)
         {
             try
             {
                 // Convert Nepali date to AD date and then validate
-                var npDate = DateConverter.GetDateInBS(year, month, day);
+                var npDate = DateConverter.GetDateInAD(npYear, npMonth, npDay);
+                return true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return false;
+            }
+        }
+        public static bool ValidNepaliDate(string npDate, DateFormats dateFormats=0)
+        {
+            try
+            {
+                // Convert Nepali date to AD date and then validate
+                var nepaliDate = DateConverter.GetDateInAD(npDate);
                 return true;
             }
             catch (ArgumentOutOfRangeException)
@@ -512,7 +537,7 @@ namespace DateConverterNepali
             }
             else
             {
-                var convertedDated = DateConverter.GetDateInBS(dateInAD);
+                var convertedDated = DateConverter.GetDateInBS(dateInAD,seperator:"/");
                 string dateInBS = convertedDated.formattedDate;
                 string[] k = new string[] { };
                 //if (dateInBS != null && dateInBS.Contains("-"))
@@ -540,7 +565,7 @@ namespace DateConverterNepali
             }
             else
             {
-                var convertedDated = DateConverter.GetDateInBS(dateInAD);
+                var convertedDated = DateConverter.GetDateInBS(dateInAD, seperator: "/");
                 string dateInBS = convertedDated.formattedDate;
                 string[] k = new string[] { };
                 //if (dateInBS != null && dateInBS.Contains("-"))
@@ -572,7 +597,7 @@ namespace DateConverterNepali
             }
             else
             {
-                var convertedDated = DateConverter.GetDateInBS(date);
+                var convertedDated = DateConverter.GetDateInBS(date, seperator: "/");
                 appointmentDate = convertedDated.formattedDate;
             }
             string[] k = appointmentDate.Split('/');
