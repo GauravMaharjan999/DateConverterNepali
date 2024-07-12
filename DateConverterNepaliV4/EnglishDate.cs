@@ -5,6 +5,9 @@ using System.Text;
 
 namespace DateConverterNepali
 {
+    /// <summary>
+    /// Represents a date in the Gregorian (English) calendar.
+    /// </summary>
     public class EnglishDate
     {
         private DateTime? _formattedDate;
@@ -21,36 +24,30 @@ namespace DateConverterNepali
 
         private int _dayNumber;
 
+        /// <summary>
+        /// Gets or sets the number of days in the month for the English date.
+        /// </summary>
         public int engDaysInMonth
         {
-            get
-            {
-                return _engDaysInMonth;
-            }
-            set
-            {
-                _engDaysInMonth = value;
-            }
+            get { return _engDaysInMonth; }
+            set { _engDaysInMonth = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the year of the English date.
+        /// </summary>
         public int engYear
         {
-            get
-            {
-                return _engYear;
-            }
-            set
-            {
-                _engYear = value;
-            }
+            get { return _engYear; }
+            set { _engYear = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the month of the English date.
+        /// </summary>
         public int engMonth
         {
-            get
-            {
-                return _engMonth;
-            }
+            get { return _engMonth; }
             set
             {
                 if (value > 12)
@@ -62,12 +59,12 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day of the English date.
+        /// </summary>
         public int engDay
         {
-            get
-            {
-                return _engDay;
-            }
+            get { return _engDay; }
             set
             {
                 if (value > 31)
@@ -79,12 +76,12 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day name of the English date.
+        /// </summary>
         public string dayName
         {
-            get
-            {
-                return _dayName;
-            }
+            get { return _dayName; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -96,12 +93,12 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day number of the English date.
+        /// </summary>
         public int dayNumber
         {
-            get
-            {
-                return _dayNumber;
-            }
+            get { return _dayNumber; }
             set
             {
                 if (value < 1 || value > 7)
@@ -112,50 +109,60 @@ namespace DateConverterNepali
                 _dayNumber = value;
             }
         }
+
+        /// <summary>
+        /// Gets the formatted date in DateTime format.
+        /// </summary>
         public DateTime? formattedDate
         {
-            get
-            {
-                return _formattedDate;
-            }
+            get { return _formattedDate; }
         }
 
-
+        /// <summary>
+        /// Sets the formatted date based on the provided year, month, day, and format.
+        /// </summary>
+        /// <param name="year">The year of the date.</param>
+        /// <param name="month">The month of the date.</param>
+        /// <param name="day">The day of the date.</param>
+        /// <param name="format">The format in which to set the date.</param>
         public void setFormattedDate(int year, int month, int day, DateFormats format)
         {
             _formattedDate = new DateTime(year, month, day);
 
-                string dateFormat;
-                switch (format)
-                {
-                    case DateFormats.mDy:
-                        dateFormat = "MM/dd/yyyy";
-                        break;
-                    case DateFormats.dMy:
-                        dateFormat = "dd/MM/yyyy";
-                        break;
-                    case DateFormats.yMd:
-                        dateFormat = "yyyy/MM/dd";
-                        break;
-                    default:
-                        dateFormat = "MM/dd/yyyy"; // Default format
-                        break;
-                }
+            string dateFormat;
+            switch (format)
+            {
+                case DateFormats.mDy:
+                    dateFormat = "MM/dd/yyyy";
+                    break;
+                case DateFormats.dMy:
+                    dateFormat = "dd/MM/yyyy";
+                    break;
+                case DateFormats.yMd:
+                    dateFormat = "yyyy/MM/dd";
+                    break;
+                default:
+                    dateFormat = "MM/dd/yyyy"; // Default format
+                    break;
+            }
 
-                string formattedDate = _formattedDate?.ToString(dateFormat, CultureInfo.InvariantCulture);
+            string formattedDate = _formattedDate?.ToString(dateFormat, CultureInfo.InvariantCulture);
 
-                // Parse the formatted date back to DateTime
-                if (DateTime.TryParseExact(formattedDate, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-                {
-                    _formattedDate = parsedDate;
-                }
-                else
-                {
-                    throw new FormatException("Unable to parse the formatted date.");
-                }
-           
+            // Parse the formatted date back to DateTime
+            if (DateTime.TryParseExact(formattedDate, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+            {
+                _formattedDate = parsedDate;
+            }
+            else
+            {
+                throw new FormatException("Unable to parse the formatted date.");
+            }
         }
 
+        /// <summary>
+        /// Gets the formatted date as DateTime.
+        /// </summary>
+        /// <returns>The formatted date as DateTime.</returns>
         public DateTime getFormattedDate()
         {
             if (_formattedDate.HasValue)
@@ -165,7 +172,7 @@ namespace DateConverterNepali
 
             if (engMonth == 0 || engYear == 0 || engDay == 0)
             {
-                throw new Exception("Date value is not set.Please set the date value first.");
+                throw new Exception("Date value is not set. Please set the date value first.");
             }
 
             return new DateTime(engYear, engMonth, engDay);

@@ -9,9 +9,19 @@ using System.Globalization;
 namespace DateConverterNepali
 {
 
+    /// <summary>
+    /// Provides methods for converting dates between Nepali (Bikram Sambat) and Gregorian (AD) calendars.
+    /// </summary>
     public static class DateConverter
     {
-
+        /// <summary>
+        /// Converts a Gregorian (AD) date to Nepali (BS) date.
+        /// </summary>
+        /// <param name="year">The year in AD.</param>
+        /// <param name="month">The month in AD.</param>
+        /// <param name="day">The day in AD.</param>
+        /// <param name="date_format">The format of the Nepali date.</param>
+        /// <returns>A NepaliDate object representing the converted date.</returns>
         public static NepaliDate GetDateInBS(int year, int month, int day, DateFormats date_format = 0)
         {
             // Checking for invalid dates
@@ -22,10 +32,16 @@ namespace DateConverterNepali
             else
             {
                 var inputDate = new DateTime(year, month, day);
-                return GetDateInBS(inputDate,date_format);
-
+                return GetDateInBS(inputDate, date_format);
             }
         }
+
+        /// <summary>
+        /// Converts a Gregorian (AD) DateTime object to Nepali (BS) date.
+        /// </summary>
+        /// <param name="dateInAD">The DateTime object in AD.</param>
+        /// <param name="date_format">The format of the Nepali date.</param>
+        /// <returns>A NepaliDate object representing the converted date.</returns>
         public static NepaliDate GetDateInBS(DateTime dateInAD, DateFormats date_format = 0)
         {
             if (dateInAD == DateTime.MinValue)
@@ -96,9 +112,7 @@ namespace DateConverterNepali
                     default:
                         formattedDate = String.Format("{0}/{1}/{2}", yearInBS, finalMonthInBS, finaldayInBS);
                         break;
-
                 }
-                Console.WriteLine(formattedDate);
 
                 var ifinalDayInBs = int.Parse(finaldayInBS);
                 var ifinalMonthInBS = int.Parse(finalMonthInBS);
@@ -116,11 +130,18 @@ namespace DateConverterNepali
                 nepaliDate.nepaliMonthInEnglishFont = ifinalMonthInBS.ToString();
                 nepaliDate.nepaliDayInNepaliFont = ((int)dateInAD.DayOfWeek).ToString();
 
-
                 return nepaliDate;
             }
         }
 
+        /// <summary>
+        /// Converts a Nepali (BS) date to Gregorian (AD) date.
+        /// </summary>
+        /// <param name="bsYear">The year in BS.</param>
+        /// <param name="bsMonth">The month in BS.</param>
+        /// <param name="bsDay">The day in BS.</param>
+        /// <param name="date_format">The format of the Gregorian date.</param>
+        /// <returns>An EnglishDate object representing the converted date.</returns>
         public static EnglishDate GetDateInAD(int bsYear, int bsMonth, int bsDay, DateFormats date_format = 0)
         {
             DateTime dateAD = DateTime.MinValue;
@@ -134,6 +155,12 @@ namespace DateConverterNepali
             return GetDateInAD(string.Concat(bsYear, "/", bsMonth, "/", bsDay), date_format);
         }
 
+        /// <summary>
+        /// Converts a Nepali (BS) date string to Gregorian (AD) date.
+        /// </summary>
+        /// <param name="dateInBS">The Nepali date string in "yyyy/MM/dd" format.</param>
+        /// <param name="date_format">The format of the Gregorian date.</param>
+        /// <returns>An EnglishDate object representing the converted date.</returns>
         public static EnglishDate GetDateInAD(string dateInBS, DateFormats date_format = 0)
         {
             DateTime dateAD;
@@ -210,7 +237,7 @@ namespace DateConverterNepali
             var englishDate = new EnglishDate();
             if (hasDate == true)
             {
-                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD, date_format); 
+                englishDate.setFormattedDate(iyearInAD, ifinalMonthInAD, ifinaldayInAD, date_format);
                 englishDate.engYear = iyearInAD;
                 englishDate.engMonth = ifinalMonthInAD;
                 englishDate.engDay = ifinaldayInAD;
@@ -218,17 +245,21 @@ namespace DateConverterNepali
                 englishDate.dayName = dateAD.DayOfWeek.ToString();
                 englishDate.engDaysInMonth = DateTime.DaysInMonth(iyearInAD, ifinalMonthInAD);
 
-
-                //return dateAD;
-
                 return englishDate;
-
             }
-            else return new EnglishDate();
+            else
+                return new EnglishDate();
         }
 
-
         #region Validation
+
+        /// <summary>
+        /// Checks if the given year, month, and day form a valid date in Gregorian calendar.
+        /// </summary>
+        /// <param name="year">The year to validate.</param>
+        /// <param name="month">The month to validate.</param>
+        /// <param name="day">The day to validate.</param>
+        /// <returns>True if the date is valid; otherwise, false.</returns>
         private static bool IsValidDate(int year, int month, int day)
         {
             if (year < 1 || month < 1 || month > 12 || day < 1 || day > DateTime.DaysInMonth(year, month))
@@ -237,6 +268,7 @@ namespace DateConverterNepali
             }
             return true;
         }
+
         #endregion
     }
     public class Calendar
@@ -292,6 +324,32 @@ namespace DateConverterNepali
             }
         }
 
+        public static string GetTimeDurationFromTwoTimeSpan(string FromTime, string ToTime)
+        {
+            try
+            {
+                DateTime dFrom;
+                DateTime dTo;
+                var TotalWorkingTime = string.Empty;
+                if (DateTime.TryParse(FromTime, out dFrom) && DateTime.TryParse(ToTime, out dTo))
+                {
+                    TimeSpan TS = dTo - dFrom;
+                    int hour = TS.Hours;
+                    int mins = TS.Minutes;
+                    int secs = TS.Seconds;
+
+                    TotalWorkingTime = hour.ToString("00") + " hrs" + " " + mins.ToString("00") + " min" + " " + secs.ToString("00") + " sec";
+                }
+                return TotalWorkingTime;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+
+
         // Method to validate if an English date is valid
         public static bool ValidEnglishDate(int year, int month, int day)
         {
@@ -322,19 +380,48 @@ namespace DateConverterNepali
         }
     }
 
+    /// <summary>
+    /// The TimeConverter class provides methods for converting dates and times 
+    /// between the English (Gregorian) calendar and the Nepali (Bikram Sambat) calendar.
+    /// It also includes methods for converting between UTC time and Nepali time.
+    /// </summary>
     public static class TimeConverter
     {
-        // Assuming this array contains the total number of days in each month of the BS calendar.
-        // This example data is for demonstration purposes and may need to be adjusted.
+
+        /// <summary>
+        /// An array representing the total number of days in each month of the Bikram Sambat (BS) calendar.
+        /// This array is used to assist in date calculations.
+        /// </summary>
+        // Total number of days in each month of the BS calendar (example data)
         private static readonly int[] bsDaysInMonth = new int[] { 30, 32, 31, 32, 31, 30, 30, 30, 30, 29, 30, 29 };
 
-        // Starting point for BS calendar conversion (Bikram Sambat 2000 corresponds to AD 1943)
+        /// <summary>
+        /// A DateTime object representing the base date in the English calendar for conversion purposes.
+        /// </summary>
+        // Base dates for conversion
         private static readonly DateTime baseEnglishDate = new DateTime(1943, 4, 13);
+        /// <summary>
+        /// A DateTime object representing the base date in the Nepali calendar for conversion purposes.
+        /// </summary>
         private static readonly DateTime baseNepaliDate = new DateTime(2000, 1, 1);
 
+        /// <summary>
+        /// A TimeSpan object representing the time offset of Nepal Standard Time from UTC (+5:45 hours).
+        /// </summary>
         // Nepal Time Offset from UTC (+5:45 hours)
         private static readonly TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
 
+        /// <summary>
+        /// Converts an English date and time to Nepali date and time.
+        /// </summary>
+        /// <param name="englishDateTime">The English date and time to convert.</param>
+        /// <returns>A tuple containing the Nepali date and time components: year, month, day, hour, minute, and second.</returns>
+        /// <example>
+        /// <code>
+        /// var nepaliDateTime = TimeConverter.ConvertToNepaliDateTime(new DateTime(2024, 7, 12, 15, 30, 0));
+        /// Console.WriteLine($"Nepali Date and Time: {nepaliDateTime.year}/{nepaliDateTime.month}/{nepaliDateTime.day} {nepaliDateTime.hour}:{nepaliDateTime.minute}:{nepaliDateTime.second}");
+        /// </code>
+        /// </example>
         public static (int year, int month, int day, int hour, int minute, int second) ConvertToNepaliDateTime(DateTime englishDateTime)
         {
             // Adjust the English date time by the Nepal time offset
@@ -371,38 +458,226 @@ namespace DateConverterNepali
 
             return (nepaliYear, nepaliMonth, nepaliDay, hour, minute, second);
         }
+
+        /// <summary>
+        /// Converts a given UTC time to Nepali time.
+        /// </summary>
+        /// <param name="utcTime">The UTC time to convert.</param>
+        /// <returns>The corresponding Nepali time as a TimeSpan.</returns>
+        /// <example>
+        /// <code>
+        /// var nepaliTime = TimeConverter.ConvertUtcToNepaliTime(new TimeSpan(10, 0, 0));
+        /// Console.WriteLine($"Nepali Time: {nepaliTime}");
+        /// </code>
+        /// </example>
         public static TimeSpan ConvertUtcToNepaliTime(TimeSpan utcTime)
         {
-            // Nepal Standard Time offset from UTC (+5:45 hours)
-            TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
-
-            // Calculate total seconds in UTC time
-            double utcTotalSeconds = utcTime.TotalSeconds;
-
-            // Calculate total seconds in Nepal time
-            double nepaliTotalSeconds = utcTotalSeconds + (nepalTimeOffset.TotalSeconds);
-
-            // Return TimeSpan representing Nepal time
-            return TimeSpan.FromSeconds(nepaliTotalSeconds);
+            return utcTime.Add(nepalTimeOffset);
         }
 
+        /// <summary>
+        /// Converts a given Nepali time to UTC time.
+        /// </summary>
+        /// <param name="nepaliTime">The Nepali time to convert.</param>
+        /// <returns>The corresponding UTC time as a TimeSpan.</returns>
+        /// <example>
+        /// <code>
+        /// var utcTime = TimeConverter.ConvertNepaliTimeToUtc(new TimeSpan(15, 45, 0));
+        /// Console.WriteLine($"UTC Time: {utcTime}");
+        /// </code>
+        /// </example>
         public static TimeSpan ConvertNepaliTimeToUtc(TimeSpan nepaliTime)
         {
-            // Nepal Standard Time offset from UTC (+5:45 hours)
-            TimeSpan nepalTimeOffset = new TimeSpan(5, 45, 0);
-
-            // Calculate total seconds in Nepal time
-            double nepaliTotalSeconds = nepaliTime.TotalSeconds;
-
-            // Calculate total seconds in UTC time
-            double utcTotalSeconds = nepaliTotalSeconds - nepalTimeOffset.TotalSeconds;
-
-            // Return TimeSpan representing UTC time
-            return TimeSpan.FromSeconds(utcTotalSeconds);
+            return nepaliTime.Subtract(nepalTimeOffset);
         }
+    }
+
+    /// <summary>
+    /// The FiscalYearHelper class provides methods for handling fiscal year operations,
+    /// including date and time conversions between English and Nepali calendars.
+    /// </summary>
+    public static class FiscalYearHelper
+    {
+        /// <summary>
+        /// Gets the year part of the provided date in either English or Nepali calendar (depending on opr parameter).
+        /// </summary>
+        /// <param name="dateInAD">The date in English calendar or equivalent in Nepali calendar.</param>
+        /// <param name="opr">The type of calendar system, English or Nepali.</param>
+        /// <returns>The year part of the date.</returns>
+        public static int GetYear(DateTime dateInAD, OprDateType opr)
+        {
+            if (opr == OprDateType.English)
+            {
+                return dateInAD.Year;
+            }
+            else
+            {
+                var convertedDated = DateConverter.GetDateInBS(dateInAD);
+                string dateInBS = convertedDated.formattedDate;
+                string[] k = new string[] { };
+                //if (dateInBS != null && dateInBS.Contains("-"))
+                if (dateInBS != null && dateInBS.Contains("/"))
+                {
+                    k = dateInBS.Split('/');
+                }
+                int year;
+                bool check = int.TryParse(k[0], out year);
+                return (check == true ? year : dateInAD.Year);
+            }
+        }
+
+        /// <summary>
+        /// Gets the day part of the provided date in either English or Nepali calendar (depending on opr parameter).
+        /// </summary>
+        /// <param name="dateInAD">The date in English calendar or equivalent in Nepali calendar.</param>
+        /// <param name="opr">The type of calendar system, English or Nepali.</param>
+        /// <returns>The day part of the date.</returns>
+        public static int GetDay(DateTime dateInAD, OprDateType opr)
+        {
+            if (opr == OprDateType.English)
+            {
+                return dateInAD.Day;
+            }
+            else
+            {
+                var convertedDated = DateConverter.GetDateInBS(dateInAD);
+                string dateInBS = convertedDated.formattedDate;
+                string[] k = new string[] { };
+                //if (dateInBS != null && dateInBS.Contains("-"))
+                if (dateInBS != null && dateInBS.Contains("/"))
+                {
+                    k = dateInBS.Split('/');
+                }
+                int day;
+                bool check = int.TryParse(k[2], out day);
+                return (check == true ? day : dateInAD.Day);
+            }
+        }
+
+        /// <summary>
+        /// Determines the fiscal year based on the provided date and calendar type.
+        /// </summary>
+        /// <param name="date">The date for which to determine the fiscal year.</param>
+        /// <param name="oprDateType">The type of calendar system, English or Nepali.</param>
+        /// <returns>The fiscal year in the format "YYYY/YY".</returns>
+        public static string GetFiscalYear(DateTime date, OprDateType oprDateType)
+        {
+            int givenYear, givenMonth, yearAfterGivenYear, yearBeforeGivenYear;
+            string requiredFiscalYear, possibleFiscalYearOne, possibleFiscalYearTwo;
+            var oprDate = oprDateType;
+            string appointmentDate = "";
+            if (oprDate == OprDateType.English)
+            {
+                appointmentDate = date.ToString("yyyy/MM/dd");
+            }
+            else
+            {
+                var convertedDated = DateConverter.GetDateInBS(date);
+                appointmentDate = convertedDated.formattedDate;
+            }
+            string[] k = appointmentDate.Split('/');
+            givenYear = int.Parse(k[0]);
+            givenMonth = int.Parse(k[1]);
+            yearAfterGivenYear = givenYear + 1;
+            yearBeforeGivenYear = givenYear - 1;
+            //if fiscal year comprises of two different years. (ex:2075/76=>{2-1, 3-2, 4-3})
+            possibleFiscalYearOne = (yearBeforeGivenYear + "/" + givenYear % 100); //one possible fiscal year for appointed year
+            possibleFiscalYearTwo = (givenYear + "/" + yearAfterGivenYear % 100);  // another possible fiscal year for appointed year
+            var durationOfPossibleFiscalYearOne = FiscalYearProvider.GetFiscalYears().Where(w => w.Year.Contains(possibleFiscalYearOne)).Select(fm => new
+            {
+                StartMonth = fm.FromMonth,
+                EndMonth = fm.ToMonth,
+            }).FirstOrDefault();
+            //if fiscal year ends within a single year (ex:2075=>{1=12, 4=12, 3-12})
+            if (durationOfPossibleFiscalYearOne == null)
+            {
+                var fiscalYearNew = FiscalYearProvider.GetFiscalYears().Where(w => w.Year.Equals(givenYear)).FirstOrDefault(); //Select(fm => fm.FromMonth).
+                if (fiscalYearNew != null)
+                {
+                    requiredFiscalYear = fiscalYearNew.ToString();
+                }
+                else
+                {
+                    requiredFiscalYear = "";
+                }
+            }
+            else
+            {
+                requiredFiscalYear = (givenMonth < durationOfPossibleFiscalYearOne.StartMonth && givenMonth <= durationOfPossibleFiscalYearOne.EndMonth) ? possibleFiscalYearOne : possibleFiscalYearTwo;
+            }
+            return requiredFiscalYear;
+        }
+
+        /// <summary>
+        /// Retrieves a list of years from the start year (2000) to the current year in the English calendar.
+        /// </summary>
+        /// <returns>An enumerable list of integers representing years.</returns>
+        public static IEnumerable<int?> GetYearListAd()
+        {
+            int startYear = 2000;
+            int endYear = DateTime.Now.Year;
+
+            List<int?> years = new List<int?>();
+            for (int year = startYear; year <= endYear; year++)
+            {
+                years.Add(year);
+            }
+
+            return years;
+        }
+
+        /// <summary>
+        /// Retrieves the fiscal year details based on the provided year in the format "YYYY/YY".
+        /// </summary>
+        /// <param name="year">The fiscal year to retrieve details for.</param>
+        /// <returns>The fiscal year details or null if not found.</returns>
+        public static FiscalYear GetFiscalYearByYear(string year)
+        {
+            // Assuming FiscalYearProvider.GetFiscalYears() returns a list of FiscalYear objects
+            var fiscalYears = FiscalYearProvider.GetFiscalYears();
+
+            // Filter the fiscal years based on the input year
+            var fiscalYear = fiscalYears
+                .FirstOrDefault(x => x.Year.Split('/')[0] == year);
+
+            // Return the found fiscal year or null if not found
+            return fiscalYear;
+        }
+
+        /// <summary>
+        /// Calculates the duration between two time spans formatted as "HH:mm:ss".
+        /// </summary>
+        /// <param name="FromTime">The start time in "HH:mm:ss" format.</param>
+        /// <param name="ToTime">The end time in "HH:mm:ss" format.</param>
+        /// <returns>The duration between the two times formatted as "HH hrs mm min ss sec".</returns>
+        public static string GetTimeDurationFromTwoTimeSpan(string FromTime, string ToTime)
+        {
+            try
+            {
+                DateTime dFrom;
+                DateTime dTo;
+                var TotalWorkingTime = string.Empty;
+                if (DateTime.TryParse(FromTime, out dFrom) && DateTime.TryParse(ToTime, out dTo))
+                {
+                    TimeSpan TS = dTo - dFrom;
+                    int hour = TS.Hours;
+                    int mins = TS.Minutes;
+                    int secs = TS.Seconds;
+
+                    TotalWorkingTime = hour.ToString("00") + " hrs" + " " + mins.ToString("00") + " min" + " " + secs.ToString("00") + " sec";
+                }
+                return TotalWorkingTime;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
 
 
     }
+
     public static class DateArray
     {
         public static int[] DateDataArray(int year)

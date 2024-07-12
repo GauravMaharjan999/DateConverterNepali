@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DateConverterNepali
 {
+    /// <summary>
+    /// Represents a month in the Bikram Sambat (BS) calendar.
+    /// </summary>
     public class MonthBS
     {
         [Key]
@@ -14,107 +17,66 @@ namespace DateConverterNepali
 
         [StringLength(10)]
         public string MonthCode { get; set; }
+
         [StringLength(20)]
         public string Name { get; set; }
+
         [StringLength(20)]
         public string MonthNameLocLang { get; set; }
     }
+
+    /// <summary>
+    /// Provides methods to retrieve months in the Bikram Sambat (BS) calendar.
+    /// </summary>
     public static class MonthBSProvider
     {
+        /// <summary>
+        /// Retrieves a list of months in the Bikram Sambat (BS) calendar.
+        /// </summary>
+        /// <returns>A list of MonthBS objects representing months in the BS calendar.</returns>
         public static List<MonthBS> GetMonths()
         {
             List<MonthBS> months = new List<MonthBS>
             {
-                new MonthBS
-                {
-                    Id = 1,
-                    MonthCode = "01",
-                    Name = "Baisakh"
-                },
-                new MonthBS
-                {
-                    Id = 2,
-                    MonthCode = "02",
-                    Name = "Jestha"
-                },
-                new MonthBS
-                {
-                    Id = 3,
-                    MonthCode = "03",
-                    Name = "Ashad"
-                },
-                new MonthBS
-                {
-                    Id = 4,
-                    MonthCode = "04",
-                    Name = "Shrawan"
-                },
-                new MonthBS
-                {
-                    Id = 5,
-                    MonthCode = "05",
-                    Name = "Bhadra"
-                },
-                new MonthBS
-                {
-                    Id = 6,
-                    MonthCode = "06",
-                    Name = "Ashwin"
-                },
-                new MonthBS
-                {
-                    Id = 7,
-                    MonthCode = "07",
-                    Name = "Kartik"
-                },
-                new MonthBS
-                {
-                    Id = 8,
-                    MonthCode = "08",
-                    Name = "Mangshir"
-                },
-                new MonthBS
-                {
-                    Id = 9,
-                    MonthCode = "09",
-                    Name = "Poush"
-                },
-                new MonthBS
-                {
-                    Id = 10,
-                    MonthCode = "10",
-                    Name = "Magh"
-                },
-                new MonthBS
-                {
-                    Id = 11,
-                    MonthCode = "11",
-                    Name = "Falgun"
-                },
-                new MonthBS
-                {
-                    Id = 12,
-                    MonthCode = "12",
-                    Name = "Chaitra"
-                }
+                new MonthBS { Id = 1, MonthCode = "01", Name = "Baisakh" },
+                new MonthBS { Id = 2, MonthCode = "02", Name = "Jestha" },
+                new MonthBS { Id = 3, MonthCode = "03", Name = "Ashad" },
+                new MonthBS { Id = 4, MonthCode = "04", Name = "Shrawan" },
+                new MonthBS { Id = 5, MonthCode = "05", Name = "Bhadra" },
+                new MonthBS { Id = 6, MonthCode = "06", Name = "Ashwin" },
+                new MonthBS { Id = 7, MonthCode = "07", Name = "Kartik" },
+                new MonthBS { Id = 8, MonthCode = "08", Name = "Mangshir" },
+                new MonthBS { Id = 9, MonthCode = "09", Name = "Poush" },
+                new MonthBS { Id = 10, MonthCode = "10", Name = "Magh" },
+                new MonthBS { Id = 11, MonthCode = "11", Name = "Falgun" },
+                new MonthBS { Id = 12, MonthCode = "12", Name = "Chaitra" }
             };
             return months;
         }
     }
+
+    /// <summary>
+    /// Provides methods to retrieve Nepali day names.
+    /// </summary>
     public static class NepaliDayProvider
     {
         private static readonly string[] NepaliDays =
         {
-        "आइतबार", // Sunday
-        "सोमबार", // Monday
-        "मंगलबार", // Tuesday
-        "बुधबार", // Wednesday
-        "बिहीबार", // Thursday
-        "शुक्रबार", // Friday
-        "शनिबार"  // Saturday
-    };
-        
+            "आइतबार", // Sunday
+            "सोमबार", // Monday
+            "मंगलबार", // Tuesday
+            "बुधबार", // Wednesday
+            "बिहीबार", // Thursday
+            "शुक्रबार", // Friday
+            "शनिबार"  // Saturday
+        };
 
+        /// <summary>
+        /// Retrieves the Nepali day name corresponding to the given day number.
+        /// </summary>
+        /// <param name="dayNumber">The day number (0 for Sunday, 1 for Monday, etc.).</param>
+        /// <returns>The Nepali day name.</returns>
+        /// <exception cref="ArgumentException">Thrown if the day number is out of valid range (0-6).</exception>
         public static string GetNepaliFontDayName(int dayNumber)
         {
             if (dayNumber < 0 || dayNumber > 6)
@@ -123,7 +85,5 @@ namespace DateConverterNepali
             }
             return NepaliDays[dayNumber];
         }
-        
     }
-
 }

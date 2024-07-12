@@ -5,6 +5,10 @@ using System.Text;
 
 namespace DateConverterNepali
 {
+    /// <summary>
+    /// The NepaliDate class provides properties and methods for managing Nepali date operations,
+    /// including setting and retrieving dates in different formats.
+    /// </summary>
     public class NepaliDate
     {
         private string _formattedDate;
@@ -24,25 +28,21 @@ namespace DateConverterNepali
         private string _nepaliMonthInEnglishFont;
         private string _nepaliDayInNepaliFont;
 
-
+        /// <summary>
+        /// Gets or sets the year of the Nepali date.
+        /// </summary>
         public int npYear
         {
-            get
-            {
-                return _npYear;
-            }
-            set
-            {
-                _npYear = value;
-            }
+            get { return _npYear; }
+            set { _npYear = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the month of the Nepali date.
+        /// </summary>
         public int npMonth
         {
-            get
-            {
-                return _npMonth;
-            }
+            get { return _npMonth; }
             set
             {
                 if (value > 12)
@@ -54,12 +54,12 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day of the Nepali date.
+        /// </summary>
         public int npDay
         {
-            get
-            {
-                return _npDay;
-            }
+            get { return _npDay; }
             set
             {
                 if (value > 32)
@@ -70,15 +70,15 @@ namespace DateConverterNepali
                 _npDay = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the month name in Nepali font.
+        /// </summary>
         public string nepaliMonthInNepaliFont
         {
-            get
-            {
-                return _nepaliMonthInNepaliFont;
-            }
+            get { return _nepaliMonthInNepaliFont; }
             set
             {
-
                 switch (int.Parse(value))
                 {
                     case 1: _nepaliMonthInNepaliFont = "बैशाख"; break;
@@ -97,12 +97,13 @@ namespace DateConverterNepali
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets the month name in English font.
+        /// </summary>
         public string nepaliMonthInEnglishFont
         {
-            get
-            {
-                return _nepaliMonthInEnglishFont;
-            }
+            get { return _nepaliMonthInEnglishFont; }
             set
             {
                 var month = MonthBSProvider.GetMonths().FirstOrDefault(x => x.Id == int.Parse(value));
@@ -114,16 +115,15 @@ namespace DateConverterNepali
                 {
                     throw new ArgumentException("Invalid month number. Month number must be between 1 and 12.");
                 }
-
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day name in Nepali font.
+        /// </summary>
         public string nepaliDayInNepaliFont
         {
-            get
-            {
-                return _nepaliDayInNepaliFont;
-            }
+            get { return _nepaliDayInNepaliFont; }
             set
             {
                 int dayNumber;
@@ -138,24 +138,21 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the number of days in the month for the Nepali date.
+        /// </summary>
         public int npDaysInMonth
         {
-            get
-            {
-                return _npDaysInMonth;
-            }
-            set
-            {
-                _npDaysInMonth = value;
-            }
+            get { return _npDaysInMonth; }
+            set { _npDaysInMonth = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the day name of the Nepali date.
+        /// </summary>
         public string dayName
         {
-            get
-            {
-                return _dayName;
-            }
+            get { return _dayName; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -167,12 +164,12 @@ namespace DateConverterNepali
             }
         }
 
+        /// <summary>
+        /// Gets or sets the day number of the Nepali date.
+        /// </summary>
         public int dayNumber
         {
-            get
-            {
-                return _dayNumber;
-            }
+            get { return _dayNumber; }
             set
             {
                 if (value < 1 || value > 7)
@@ -183,13 +180,22 @@ namespace DateConverterNepali
                 _dayNumber = value;
             }
         }
+
+        /// <summary>
+        /// Gets the formatted date as a string.
+        /// </summary>
         public string formattedDate
         {
-            get {
-                return _formattedDate;
-            }
+            get { return _formattedDate; }
         }
 
+        /// <summary>
+        /// Sets the formatted date based on the provided year, month, day, and format.
+        /// </summary>
+        /// <param name="year">The year of the date.</param>
+        /// <param name="month">The month of the date.</param>
+        /// <param name="day">The day of the date.</param>
+        /// <param name="date_format">The format in which to set the date.</param>
         public void setFormattedDate(int year, int month, int day, DateFormats date_format)
         {
             string formattedDate = "";
@@ -224,6 +230,10 @@ namespace DateConverterNepali
             _formattedDate = formattedDate;
         }
 
+        /// <summary>
+        /// Gets the formatted date as a string.
+        /// </summary>
+        /// <returns>The formatted date as a string.</returns>
         public string getFormattedDate()
         {
             if (_formattedDate != null)
@@ -234,11 +244,25 @@ namespace DateConverterNepali
             return npMonth + "-" + npDay + "-" + npYear;
         }
     }
+
+    /// <summary>
+    /// Enumeration of date formats for NepaliDate class.
+    /// </summary>
     public enum DateFormats
     {
-        
+        /// <summary>
+        /// Month-Day-Year format (MM-dd-yyyy).
+        /// </summary>
         mDy,
+
+        /// <summary>
+        /// Day-Month-Year format (dd-MM-yyyy).
+        /// </summary>
         dMy,
+
+        /// <summary>
+        /// Year-Month-Day format (yyyy-MM-dd).
+        /// </summary>
         yMd
     }
 }
