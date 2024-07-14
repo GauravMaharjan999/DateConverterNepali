@@ -69,19 +69,6 @@ class Program
         //Console.WriteLine($"Week Day: {englishDate.WeekDay}"); 
         #endregion
 
-
-
-        //// Example UTC TimeSpan
-        //TimeSpan utcTime = new TimeSpan(11, 00, 29); // 10 hours and 30 minutes
-
-        //// Convert UTC TimeSpan to Nepali TimeSpan
-        //TimeSpan nepaliTime = TimeConverter.ConvertUtcToNepaliTime(utcTime);
-
-        //Console.WriteLine($"UTC Time: {utcTime}");
-        //Console.WriteLine($"Nepali Time: {nepaliTime}");
-
-
-
         #region Date Converter
         // Convert AD date to BS date
         int year = 2002;
