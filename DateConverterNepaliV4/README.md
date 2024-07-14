@@ -151,7 +151,7 @@ var englishDateFromString = DateConverter.GetDateInAD("2080/3/1");
 Console.WriteLine($"English Date from String: {englishDateFromString.FormattedDate}");
 ```
 
-### Fiscal Year Helper class
+## Fiscal Year Helper class
 ### ConvertToNepaliDateTime
 
 ```csharp
@@ -223,7 +223,7 @@ Console.WriteLine($"Duration: {duration}");
 
 
 
-### Calender class
+## Calender class
 
 
 ### IsLeapYear

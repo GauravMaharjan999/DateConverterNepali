@@ -94,7 +94,7 @@ class Program
         Console.WriteLine($"Input Year: {yearBs}");
         Console.WriteLine($"Input Month: {monthBs}");
         Console.WriteLine($"Input Day: {dayBs}");
-        PrintProperties(dateInAd); 
+        PrintProperties(dateInAd);
         #endregion
 
         Console.WriteLine($"####################################################################################################################################################################################################################################");
