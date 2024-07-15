@@ -13,7 +13,7 @@ Install-Package DateConverterNepali
 
 ## Usage
 
-# DateConverter
+# Date Converter Class
 
 This class contains static methods which can be used to convert dates.
 
