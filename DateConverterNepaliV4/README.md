@@ -297,11 +297,6 @@ Console.WriteLine($"Nepali Date {nepaliYear}-{nepaliMonth}-{nepaliDay} is valid:
 
 Additional examples and usage scenarios can be found in the [Examples](#additional-examples) section of this README.
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-
 
 ## License
 
