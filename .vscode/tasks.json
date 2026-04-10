@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test Solution",
+      "type": "shell",
+      "command": "${env:USERPROFILE}\\.dotnet\\dotnet.exe",
+      "args": [
+        "test",
+        "DateConverterNepaliV4.sln"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Run Console App",
+      "type": "shell",
+      "command": "${env:USERPROFILE}\\.dotnet\\dotnet.exe",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}\\DateConverterNepali.Cli\\DateConverterNepali.Cli.csproj"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Pack Library",
+      "type": "shell",
+      "command": "${env:USERPROFILE}\\.dotnet\\dotnet.exe",
+      "args": [
+        "pack",
+        "DateConverterNepaliV4\\DateConverterNepali.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "artifacts"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Test + Run Console App",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Test Solution",
+        "Run Console App"
+      ]
+    }
+  ]
+}

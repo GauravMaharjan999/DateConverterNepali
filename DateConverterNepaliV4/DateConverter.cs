@@ -239,6 +239,10 @@ namespace DateConverterNepali
             int yearInAD = bsYear - 57;
             int[] bsDateData = DateArray.DateDataArray(yearInAD + 1);
             if (bsDateData == null) { return new EnglishDate(); }
+            if (bsDay > bsDateData[bsMonth + 2])
+            {
+                return new EnglishDate();
+            }
             for (int j = 3; j <= bsMonth + 1; j++)
             {
                 DayOfYearInBS += bsDateData[j];

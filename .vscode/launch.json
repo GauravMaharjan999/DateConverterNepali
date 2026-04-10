@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Console App (.NET Core 2.1)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Test Solution",
+      "program": "${workspaceFolder}/DateConverterNepali.Cli/bin/Debug/netcoreapp2.1/DateConverterNepali.Cli.dll",
+      "cwd": "${workspaceFolder}/DateConverterNepali.Cli",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "env": {
+        "PATH": "${env:USERPROFILE}\\.dotnet;${env:PATH}"
+      }
+    }
+  ]
+}

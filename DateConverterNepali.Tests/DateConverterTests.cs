@@ -90,6 +90,39 @@ namespace DateConverterNepali.Tests
             Assert.Equal(new DateTime(2024, 7, 11), convertedDate);
         }
 
+        [Fact]
+        public void TestGetDateInAD_2083_08_30_ReturnsEmptyEnglishDate()
+        {
+            // Arrange
+            int bsYear = 2083;
+            int bsMonth = 8;
+            int bsDay = 30;
+
+            // Act
+            EnglishDate convertedDate = DateConverter.GetDateInAD(bsYear, bsMonth, bsDay);
+
+            // Assert
+            Assert.Equal(0, convertedDate.engYear);
+            Assert.Equal(0, convertedDate.engMonth);
+            Assert.Equal(0, convertedDate.engDay);
+            Assert.Null(convertedDate.formattedDate);
+        }
+
+        [Fact]
+        public void TestDate_2025_05_14_IsCovered_WithRoundTripConversion()
+        {
+            // Arrange
+            var sourceAdDate = new DateTime(2025, 5, 14);
+
+            // Act
+            var bsDate = DateConverter.GetDateInBS(sourceAdDate, DateFormats.yMd);
+            DateTime convertedBackToAd = DateConverter.GetDateInAD(bsDate.npYear, bsDate.npMonth, bsDate.npDay).getFormattedDate();
+
+            // Assert
+            Assert.True(Calendar.ValidNepaliDate(bsDate.getFormattedDate()));
+            Assert.Equal(sourceAdDate, convertedBackToAd);
+        }
+
         [Theory]
         [InlineData(2024, true)] // Leap year
         [InlineData(2023, false)] // Not a leap year
@@ -149,6 +182,17 @@ namespace DateConverterNepali.Tests
 
             // Assert
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void TestGetDateInAD_2083_06_31_ReturnsReferenceDate()
+        {
+            var convertedDate = DateConverter.GetDateInAD(2083, 6, 31);
+
+            Assert.Equal(2026, convertedDate.engYear);
+            Assert.Equal(10, convertedDate.engMonth);
+            Assert.Equal(17, convertedDate.engDay);
+            Assert.Equal(new DateTime(2026, 10, 17), convertedDate.getFormattedDate());
         }
     }
 }

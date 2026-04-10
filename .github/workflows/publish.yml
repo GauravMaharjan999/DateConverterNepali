@@ -2,32 +2,94 @@ name: Publish NuGet Package
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
+    paths:
+      - 'DateConverterNepaliV4/DateArray.cs'
+      - 'DateConverterNepaliV4/**/*.cs'
+      - 'DateConverterNepaliV4/*.csproj'
+      - '.github/workflows/publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+        uses: actions/checkout@v4
         with:
-          dotnet-version: '5.0.x'
+          fetch-depth: 0
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Detect DateArray change
+        id: changes
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.before }}" ]; then
+            changed_files=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+          else
+            changed_files=$(git show --name-only --pretty="" "${{ github.sha }}")
+          fi
+          if echo "$changed_files" | grep -q '^DateConverterNepaliV4/DateArray.cs$'; then
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Stop when DateArray did not change
+        if: steps.changes.outputs.should_publish != 'true'
+        run: echo "DateArray.cs did not change in this push. Skipping publish."
+
+      - name: Compute next patch version
+        if: steps.changes.outputs.should_publish == 'true'
+        shell: bash
+        run: |
+          latest_tag=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n 1)
+          if [ -n "$latest_tag" ]; then
+            base_version="${latest_tag#v}"
+            IFS='.' read -r major minor patch <<< "$base_version"
+            patch=$((patch + 1))
+            next_version="$major.$minor.$patch"
+          else
+            next_version=$(grep -oP '(?<=<Version>)[^<]+' DateConverterNepaliV4/DateConverterNepali.csproj | head -n 1)
+          fi
+          echo "PACKAGE_VERSION=$next_version" >> "$GITHUB_ENV"
+
+      - name: Restore
+        if: steps.changes.outputs.should_publish == 'true'
+        run: dotnet restore DateConverterNepaliV4.sln
+
+      - name: Test
+        if: steps.changes.outputs.should_publish == 'true'
+        run: dotnet test DateConverterNepaliV4.sln --configuration Release --no-restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        if: steps.changes.outputs.should_publish == 'true'
+        run: dotnet build DateConverterNepaliV4.sln --configuration Release --no-restore /p:Version=${PACKAGE_VERSION} /p:PackageVersion=${PACKAGE_VERSION}
 
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output ./nupkg
+        if: steps.changes.outputs.should_publish == 'true'
+        run: dotnet pack DateConverterNepaliV4/DateConverterNepali.csproj --configuration Release --no-build --output ./nupkg /p:Version=${PACKAGE_VERSION} /p:PackageVersion=${PACKAGE_VERSION}
 
       - name: Publish to NuGet
+        if: steps.changes.outputs.should_publish == 'true'
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Tag release
+        if: steps.changes.outputs.should_publish == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "v${PACKAGE_VERSION}"
+          git push origin "v${PACKAGE_VERSION}"

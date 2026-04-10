@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <OutputType>Library</OutputType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
-    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.0.3</AssemblyVersion>
+    <Version>1.0.3</Version>
     <Title>NepaliDateConverter.Gaurav</Title>
     <Company>Gaurav Maharjan</Company>
     <Authors>Gaurav Maharjan</Authors>
@@ -19,7 +20,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
